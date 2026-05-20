@@ -16,8 +16,9 @@ class Race(Base):
     id = Column(Integer, primary_key=True)
     year = Column(Integer)
     round = Column(Integer)
-    name = Column(String)
+    official_name = Column(String)
     date = Column(Date)
+    circuit_id = Column(String)
 
 class PitStop(Base):
     __tablename__ = "pit_stop"
