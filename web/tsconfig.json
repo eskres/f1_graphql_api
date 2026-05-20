@@ -20,6 +20,9 @@
         "name": "next"
       }
     ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "types": ["jest", "node"]
   },
   "include": [
