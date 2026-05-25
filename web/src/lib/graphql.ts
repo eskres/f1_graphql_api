@@ -1,6 +1,6 @@
 import { print, type DocumentNode } from "graphql";
 
-const API_URL = process.env.GRAPHQL_URL ?? "http://localhost:8000/graphql";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/graphql";
 
 export async function fetchGraphQL<T>(
     query: string | DocumentNode,
