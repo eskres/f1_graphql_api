@@ -11,9 +11,9 @@ FROM node:20-alpine AS runner
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=builder /repo/web/.next/standalone ./
-COPY --from=builder /repo/web/.next/static ./.next/static
-COPY --from=builder /repo/web/public ./public
+COPY --from=builder /repo/web/.next/static ./web/.next/static
+COPY --from=builder /repo/web/public ./web/public
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-CMD ["node", "server.js"]
+CMD ["node", "web/server.js"]
