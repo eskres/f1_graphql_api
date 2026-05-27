@@ -1,5 +1,6 @@
 import './global.css';
 import { Providers } from './providers';
+import { Footer } from '@/components/Footer';
 import { Jost } from 'next/font/google';
 
 const jost = Jost({ subsets: ['latin'], variable: '--font-jost' });
@@ -19,6 +20,7 @@ export default function RootLayout({children}: {
       <html lang="en" className={jost.variable}>
         <body className="max-w-[85%] mx-auto my-10">
           <Providers>{children}</Providers>
+          <Footer />
         </body>
       </html>
   );

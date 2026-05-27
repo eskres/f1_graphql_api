@@ -1,5 +1,6 @@
 import { PitStopExplorer } from "@/components/PitStopExplorer";
 import { LapTimeChart } from "@/components/LapTimeChart";
+import { Contact } from "@/components/Contact";
 import { fetchGraphQL } from "@/lib/graphql";
 import { SEASONS_QUERY } from "@/lib/queries";
 import type { Season } from "@/lib/types";
@@ -15,6 +16,7 @@ export default async function Page() {
             <section>
                 <LapTimeChart />
             </section>
+            <Contact />
         </main>
     );
 }
