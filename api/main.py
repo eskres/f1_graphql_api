@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.resolvers import graphql_app
 from app.cache import setup_cache
+from app.openf1 import router as openf1_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -20,3 +21,4 @@ app.add_middleware(
 )
 
 app.include_router(graphql_app, prefix="/graphql")
+app.include_router(openf1_router)
