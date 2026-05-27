@@ -59,7 +59,6 @@ export function LapTimeChart() {
                 setError("generic");
                 setLoading(false);
             });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const years = [...new Set(sessions.map(s => s.year))].sort((a, b) => b - a);

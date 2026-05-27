@@ -41,14 +41,14 @@ export function MultiLineChart({ data, seriesOrder, seriesColors, xLabel, yLabel
 
         const x = d3.scaleLinear().domain(xExtent).range([ml, W - mr]);
         const yVals = displayData.map(d => d.y).sort(d3.ascending);
-        const yMin = d3.min(yVals)!;
-        const yMax = d3.max(yVals)!;
+        const yMin = d3.min(yVals) ?? 0;
+        const yMax = d3.max(yVals) ?? 0;
         const yPad = (yMax - yMin) * 0.05;
         const y = d3.scaleLinear()
             .domain([yMin - yPad, yMax + yPad])
             .range([H - mb, mt]);
         const color = (key: string): string =>
-            seriesColors?.[key] ?? d3.schemeTableau10[seriesKeys.indexOf(key) % d3.schemeTableau10.length]!;
+            seriesColors?.[key] ?? d3.schemeTableau10[seriesKeys.indexOf(key) % d3.schemeTableau10.length] ?? "#888";
 
         // Y axis with gridlines
         svg.append("g").attr("transform", `translate(${ml},0)`)
@@ -112,7 +112,7 @@ export function MultiLineChart({ data, seriesOrder, seriesColors, xLabel, yLabel
             .data(seriesKeys).join("path")
             .classed("series-line", true)
             .attr("stroke", d => color(d))
-            .attr("d", d => line(sortedGrouped.get(d)!));
+            .attr("d", d => line(sortedGrouped.get(d) ?? []));
 
         // Draw animation
         paths.each(function() {
@@ -184,7 +184,7 @@ export function MultiLineChart({ data, seriesOrder, seriesColors, xLabel, yLabel
             let nearestDist = Infinity;
 
             seriesKeys.forEach(key => {
-                const pts = sortedGrouped.get(key)!;
+                const pts = sortedGrouped.get(key) ?? [];
                 const ptIdx = bisect(pts, nearestX, 0, pts.length);
                 const pt = pts[ptIdx];
                 if (!pt || pt.x !== nearestX) return;
