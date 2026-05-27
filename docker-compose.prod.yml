@@ -57,6 +57,7 @@ services:
     image: ghcr.io/${GITHUB_REPOSITORY}-web:latest
     environment:
       GRAPHQL_URL: http://api:8000/graphql
+      API_BASE_URL: http://api:8000
     networks:
       - internal
       - traefik_proxy
