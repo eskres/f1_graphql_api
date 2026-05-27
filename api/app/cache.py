@@ -5,6 +5,7 @@ import os
 
 WEEK_TTL = 60 * 60 * 24 * 7
 MONTH_TTL = 60 * 60 * 24 * 30
+RECENT_RACE_TTL = 60 * 60 * 24 * 3
 
 async def setup_cache():
     redis = aioredis.from_url(
