@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { MultiLineChart } from "@/components/MultiLineChart";
+import { BoxPlotChart } from "@/components/BoxPlotChart";
 import { RetryCountdown } from "@/components/RetryCountdown";
 import type { MultiLineDatum, RaceSession, RaceLapsResponse } from "@/lib/multiline/types";
 
-export function LapTimeChart() {
+export function RacePaceExplorer() {
     const [sessions, setSessions] = useState<RaceSession[]>([]);
     const [selectedYear, setSelectedYear] = useState<number | null>(null);
     const [selectedKey, setSelectedKey] = useState<number | null>(null);
@@ -86,9 +87,9 @@ export function LapTimeChart() {
 
     const filteredDriverOrder = driverFilter ? driverOrder.slice(0, driverFilter) : driverOrder;
 
-    const title = chartSession
-        ? `${chartSession.year} ${chartSession.meeting_name ?? `${chartSession.year} ${chartSession.location} Grand Prix`} · Lap Times`
-        : "Lap Times";
+    const raceTitle = chartSession
+        ? `${chartSession.year} ${chartSession.meeting_name ?? `${chartSession.location} Grand Prix`}`
+        : null;
 
     return (
         <div>
@@ -129,7 +130,8 @@ export function LapTimeChart() {
                     </button>
                 ))}
             </div>
-            <h3 className="text-2xl font-bold mb-6">{title}</h3>
+            {raceTitle && <h3 className="text-2xl mt-6 font-bold">{raceTitle}</h3>}
+            <h4 className="text-lg font-semibold my-6 text-gray-500">Lap time per driver across all laps</h4>
 
             {loading && (
                 <div className="h-64 flex items-center justify-center text-gray-400 text-sm">
@@ -150,21 +152,35 @@ export function LapTimeChart() {
                 </div>
             )}
             {!loading && !error && data.length > 0 && (
-                <MultiLineChart
-                    data={data}
-                    seriesOrder={filteredDriverOrder}
-                    seriesColors={driverColors}
-                    xLabel="Lap"
-                    yLabel="Lap time (s)"
-                    formatX={v => String(Math.round(v))}
-                    formatY={v => {
-                        const mins = Math.floor(v / 60);
-                        const secs = v % 60;
-                        return `${mins}:${secs.toFixed(3).padStart(6, '0')}`;
-                    }}
-                    scPeriods={scPeriods}
-                    vscPeriods={vscPeriods}
-                />
+                <>
+                    <MultiLineChart
+                        data={data}
+                        seriesOrder={filteredDriverOrder}
+                        seriesColors={driverColors}
+                        xLabel="Lap"
+                        yLabel="Lap time (mm:ss.sss)"
+                        formatX={v => String(Math.round(v))}
+                        formatY={v => {
+                            const mins = Math.floor(v / 60);
+                            const secs = v % 60;
+                            return `${mins}:${secs.toFixed(3).padStart(6, '0')}`;
+                        }}
+                        scPeriods={scPeriods}
+                        vscPeriods={vscPeriods}
+                    />
+                    <h4 className="text-lg font-semibold mt-6 text-gray-500">Lap time distribution per driver</h4>
+                    <BoxPlotChart
+                        data={data.filter(d => filteredDriverOrder.includes(d.series))}
+                        seriesOrder={filteredDriverOrder}
+                        seriesColors={driverColors}
+                        yLabel="Lap time (mm:ss.sss)"
+                        formatY={v => {
+                            const mins = Math.floor(v / 60);
+                            const secs = v % 60;
+                            return `${mins}:${secs.toFixed(3).padStart(6, '0')}`;
+                        }}
+                    />
+                </>
             )}
         </div>
     );

@@ -1,5 +1,5 @@
 import { PitStopExplorer } from "@/components/PitStopExplorer";
-import { LapTimeChart } from "@/components/LapTimeChart";
+import { RacePaceExplorer } from "@/components/RacePaceExplorer";
 import { Contact } from "@/components/Contact";
 import { fetchGraphQL } from "@/lib/graphql";
 import { SEASONS_QUERY } from "@/lib/queries";
@@ -14,7 +14,7 @@ export default async function Page() {
                 <PitStopExplorer initialSeasons={data.seasons} />
             </section>
             <section>
-                <LapTimeChart />
+                <RacePaceExplorer />
             </section>
             <Contact />
         </main>

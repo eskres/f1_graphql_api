@@ -30,8 +30,8 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel 
             seriesColors?.[key] ?? d3.schemeTableau10[keys.indexOf(key) % d3.schemeTableau10.length] ?? "#888";
 
         const allY = stats.flatMap(s => [s.lo, s.q1, s.q2, s.q3, s.hi, ...s.outliers]);
-        const yMin = d3.min(allY)!;
-        const yMax = d3.max(allY)!;
+        const yMin = d3.min(allY) ?? 0;
+        const yMax = d3.max(allY) ?? 0;
         const yPad = (yMax - yMin) * 0.06;
 
         const x = d3.scaleBand().domain(keys).range([ml, W - mr]).padding(0.4);
@@ -69,7 +69,8 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel 
         const g = svg.append("g");
 
         for (const s of stats) {
-            const cx = x(s.key)! + bw / 2;
+            const xPos = x(s.key) ?? 0;
+            const cx = xPos + bw / 2;
             const c = color(s.key);
             const capW = bw * 0.3;
 
@@ -89,7 +90,7 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel 
 
             // IQR box
             g.append("rect")
-                .attr("x", x(s.key)!)
+                .attr("x", xPos)
                 .attr("y", y(s.q3))
                 .attr("width", bw)
                 .attr("height", Math.max(1, y(s.q1) - y(s.q3)))
@@ -98,7 +99,7 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel 
 
             // Median line
             g.append("line")
-                .attr("x1", x(s.key)!).attr("x2", x(s.key)! + bw)
+                .attr("x1", xPos).attr("x2", xPos + bw)
                 .attr("y1", y(s.q2)).attr("y2", y(s.q2))
                 .attr("stroke", c).attr("stroke-width", 2.5);
 
@@ -118,7 +119,7 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel 
             tooltipG.style("display", null).selectAll("*").remove();
 
             const c = color(s.key);
-            const cx = x(s.key)! + bw / 2;
+            const cx = (x(s.key) ?? 0) + bw / 2;
             const lines = s.outliers.length > 0
                 ? ["Max", "75th percentile", "Median", "25th percentile", "Min", "Outliers"]
                 : ["Max", "75th percentile", "Median", "25th percentile", "Min"];
@@ -163,7 +164,7 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel 
         // Invisible hit areas per column
         for (const s of stats) {
             svg.append("rect")
-                .attr("x", x(s.key)! - (x.step() - bw) / 2)
+                .attr("x", (x(s.key) ?? 0) - (x.step() - bw) / 2)
                 .attr("y", mt)
                 .attr("width", x.step())
                 .attr("height", H - mt - mb)

@@ -8,9 +8,10 @@ export function computeBoxStats(data: MultiLineDatum[], seriesOrder?: string[]):
     const stats: BoxStats[] = [];
     grouped.forEach((pts, key) => {
         const vals = pts.map(d => d.y).sort(d3.ascending);
-        const q1 = d3.quantile(vals, 0.25)!;
-        const q2 = d3.quantile(vals, 0.5)!;
-        const q3 = d3.quantile(vals, 0.75)!;
+        const q1 = d3.quantile(vals, 0.25);
+        const q2 = d3.quantile(vals, 0.5);
+        const q3 = d3.quantile(vals, 0.75);
+        if (q1 == null || q2 == null || q3 == null) return;
         const iqr = q3 - q1;
         const lo = Math.max(d3.min(vals) ?? q1, q1 - 1.5 * iqr);
         const hi = Math.min(d3.max(vals) ?? q3, q3 + 1.5 * iqr);
