@@ -57,7 +57,6 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel,
             .call(g => g.select(".domain").remove())
             .call(g => g.selectAll("text").attr("font-size", 11));
 
-
         if (yLabel) {
             svg.append("text")
                 .attr("transform", `translate(14,${(mt + H - mb) / 2}) rotate(-90)`)
@@ -137,7 +136,6 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel,
             tooltipG.style("display", null).selectAll("*").remove();
 
             const c = color(s.key);
-            const cx = (x(s.key) ?? 0) + bw / 2;
             const lines = s.outliers.length > 0
                 ? ["Max", "75th percentile", "Median", "25th percentile", "Min", "Outliers"]
                 : ["Max", "75th percentile", "Median", "25th percentile", "Min"];
@@ -152,8 +150,9 @@ export function BoxPlotChart({ data, seriesOrder, seriesColors, formatY, yLabel,
 
             const lh = 16, pad = 8, bw2 = 190;
             const bh = lines.length * lh + pad * 2 + 18;
-            let tx = cx + bw / 2 + 8;
-            if (tx + bw2 > W - mr) tx = cx - bw / 2 - bw2 - 8;
+            const scrollLeft = containerRef.current?.scrollLeft ?? 0;
+            const visibleWidth = containerRef.current?.clientWidth ?? W;
+            const tx = scrollLeft + (visibleWidth - bw2) / 2;
             const ty = mt + 4;
 
             tooltipG.append("rect")
